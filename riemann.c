@@ -1,6 +1,6 @@
 /* File:     riemann.c
  *
- * Compile:  gcc -o exec riemann_omp.c -lm
+ * Compile:  gcc -o riemann riemann.c -lm
  * Run:      ./exec a b
  *
  * STEFANO ALBERTO ARAGONI MALDONADO
@@ -15,7 +15,7 @@ double f(double x, int option);
 double trapezoides(double a, double b, int n, int option);
 
 int main(int argc, char* argv[]) {
-    int n = 1000000;  // 10e6
+    long int n = 10000000000;  //1e10
     double a = 0;
     double b = 10; // Intervalo default de 0 a 10
 
@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
     double elapsed = (double)(finish - start) / CLOCKS_PER_SEC;
     printf("Tiempo: %f\n", elapsed);
 
-    printf("Con n = %d trapezoides, nuestra aproximación \n", n);
+    printf("Con n = %ld trapezoides, nuestra aproximación \n", n);
     printf("de la integral de %f a %f es = %f\n", a, b, integral);
 
     return 0;

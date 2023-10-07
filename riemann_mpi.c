@@ -112,7 +112,7 @@ double trapezoides(
 /*-------------------------------------------------------------------*/
 int main(void) {
 
-      int n = 1000000;    // 10e6 
+      long int n = 10000000000;  //1e10
       int a = 0;           
       int b = 10;      // Intervalo default de 0 a 10
       int funcion = 1;        // Default de la función x^2
@@ -133,19 +133,19 @@ int main(void) {
             return 0;
       }
 
-      double start = clock();
+      double start = MPI_Wtime();
 
       double integral_global = 0.0;  // Variable global para guardar la integral
       double integral = trapezoides(a, b, n, funcion, my_rank, comm_sz, comm);     // Manda a calcular la integral de la funcion
       MPI_Reduce(&integral, &integral_global, 1, MPI_DOUBLE, MPI_SUM, 0, comm);   // Reduce la integral de cada proceso en la variable global
 
-      double finish = clock();
-      double elapsed = (double)(finish - start) / CLOCKS_PER_SEC;
+      double finish = MPI_Wtime();
+      double elapsed = finish - start;
 
       if (my_rank == 0) {
             printf("\nTiempo: %f\n", elapsed);
             
-            printf("Con n = %d trapezoides, nuestra aproximación \n", n);
+            printf("Con n = %ld trapezoides, nuestra aproximación \n", n);
             printf("de la integral de %d a %d es = %f\n", a, b, integral_global);
       }
 

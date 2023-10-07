@@ -1,10 +1,10 @@
 /* File:     riemann_omp.c
  *
- * Compile:  gcc -o exec riemann_omp.c -lm -fopenmp
- * Run:      ./exec a b thread_count
+ * Compile:  gcc -o riemann_omp riemann_omp.c -lm -fopenmp
+ * Run:      ./riemann_omp a b thread_count
  *
- * Compile on MACOS: /usr/local/opt/llvm/bin/clang -fopenmp -o exec riemann_omp.c
- * Run:      ./exec a b thread_count
+ * Compile on MACOS: /usr/local/opt/llvm/bin/clang -fopenmp -o riemann_omp riemann_omp.c
+ * Run:      ./riemann_omp a b thread_count
  * 
  * 
  * STEFANO ALBERTO ARAGONI MALDONADO
@@ -20,7 +20,7 @@ double f(double x, int option);
 void trapezoides(double a, double b, int n, int option, double* integral_global);
 
 int main(int argc, char* argv[]) {
-    int n = 1000000;    // 10e6
+    long int n = 10000000000;  //1e10
     double a = 0;
     double b = 10;      // Intervalo default de 0 a 10
     int thread_count = 4;   // Default de 4 threads
@@ -44,16 +44,16 @@ int main(int argc, char* argv[]) {
 
     double integral_global = 0.0;  // Variable global para guardar la integral
 
-    double start = clock();
+    double start = omp_get_wtime();
 
     #pragma omp parallel num_threads(thread_count)      // Distribuye el trabajo en los threads
     trapezoides(a, b, n, opcion, &integral_global);     // Manda a calcular la integral de la funcion
 
-    double finish = clock();
-    double elapsed = (double)(finish - start) / CLOCKS_PER_SEC;
+    double finish = omp_get_wtime();
+    double elapsed = finish - start;
     printf("\nTiempo: %f\n", elapsed);
     
-    printf("Con n = %d trapezoides, nuestra aproximación \n", n);
+    printf("Con n = %ld trapezoides, nuestra aproximación \n", n);
     printf("de la integral de %f a %f es = %f\n", a, b, integral_global);
 
     return 0;
