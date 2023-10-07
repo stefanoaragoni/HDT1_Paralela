@@ -1,7 +1,19 @@
-// Stefano Alberto Aragoni Maldonado (20261)
+/* File:     riemann_omp.c
+ *
+ * Compile:  gcc -o exec riemann_omp.c -lm -fopenmp
+ * Run:      ./exec a b thread_count
+ *
+ * Compile on MACOS: /usr/local/opt/llvm/bin/clang -fopenmp -o exec riemann_omp.c
+ * Run:      ./exec a b thread_count
+ * 
+ * 
+ * STEFANO ALBERTO ARAGONI MALDONADO
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 #include <omp.h>
 
 double f(double x, int option);
@@ -11,7 +23,7 @@ int main(int argc, char* argv[]) {
     int n = 1000000;    // 10e6
     double a = 0;
     double b = 10;      // Intervalo default de 0 a 10
-    int thread_count = 10;   // Default de 10 threads
+    int thread_count = 4;   // Default de 4 threads
 
     // Scanf para preguntar qué función se quiere integrar
     printf("Funciones:\n1. x^2\n2. 2x^3\n3. sin(x)\n");
@@ -32,9 +44,15 @@ int main(int argc, char* argv[]) {
 
     double integral_global = 0.0;  // Variable global para guardar la integral
 
+    double start = clock();
+
     #pragma omp parallel num_threads(thread_count)      // Distribuye el trabajo en los threads
     trapezoides(a, b, n, opcion, &integral_global);     // Manda a calcular la integral de la funcion
 
+    double finish = clock();
+    double elapsed = (double)(finish - start) / CLOCKS_PER_SEC;
+    printf("\nTiempo: %f\n", elapsed);
+    
     printf("Con n = %d trapezoides, nuestra aproximación \n", n);
     printf("de la integral de %f a %f es = %f\n", a, b, integral_global);
 

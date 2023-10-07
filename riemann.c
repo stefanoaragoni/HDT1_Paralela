@@ -1,7 +1,15 @@
-// Stefano Alberto Aragoni Maldonado (20261)
+/* File:     riemann.c
+ *
+ * Compile:  gcc -o exec riemann_omp.c -lm
+ * Run:      ./exec a b
+ *
+ * STEFANO ALBERTO ARAGONI MALDONADO
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 
 double f(double x, int option);
 double trapezoides(double a, double b, int n, int option);
@@ -22,7 +30,13 @@ int main(int argc, char* argv[]) {
         b = strtod(argv[2], NULL);
     }
 
+    double start = clock();
+
     double integral = trapezoides(a, b, n, opcion);     // Manda a calcular la integral de la funcion
+
+    double finish = clock();
+    double elapsed = (double)(finish - start) / CLOCKS_PER_SEC;
+    printf("Tiempo: %f\n", elapsed);
 
     printf("Con n = %d trapezoides, nuestra aproximación \n", n);
     printf("de la integral de %f a %f es = %f\n", a, b, integral);
