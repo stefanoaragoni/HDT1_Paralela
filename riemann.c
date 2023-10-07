@@ -1,7 +1,7 @@
 /* File:     riemann.c
  *
  * Compile:  gcc -o riemann riemann.c -lm
- * Run:      ./exec a b
+ * Run:      ./riemann a b
  *
  * STEFANO ALBERTO ARAGONI MALDONADO
  */
